@@ -34,3 +34,18 @@ struct Photo: Codable {
     let value: URL
     let type: String
 }
+
+struct Person {
+    enum PersonUpdate {
+        case delete(Int)
+        case insert(Person, Int)
+        case move(Int, Int)
+        case reload(Int)
+        case rename(Int)
+    }
+    
+    var name: String
+    var email: String
+    var status: Bool
+    var avatar: UIImage
+}

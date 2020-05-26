@@ -16,6 +16,8 @@
 		3590AF24247D03C90058EF49 /* DetailedInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF23247D03C90058EF49 /* DetailedInfoViewController.swift */; };
 		3590AF27247D04D20058EF49 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF26247D04D20058EF49 /* Person.swift */; };
 		3590AF2A247D05530058EF49 /* ColumnFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF29247D05530058EF49 /* ColumnFlowLayout.swift */; };
+		3590AF2D247D296A0058EF49 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF2C247D296A0058EF49 /* SpinnerViewController.swift */; };
+		3590AF2F247D2CBC0058EF49 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3590AF2E247D2CBC0058EF49 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		3590AF23247D03C90058EF49 /* DetailedInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedInfoViewController.swift; sourceTree = "<group>"; };
 		3590AF26247D04D20058EF49 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		3590AF29247D05530058EF49 /* ColumnFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnFlowLayout.swift; sourceTree = "<group>"; };
+		3590AF2C247D296A0058EF49 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
+		3590AF2E247D2CBC0058EF49 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 			children = (
 				35523E19247C55EE0080FC9E /* Main.storyboard */,
 				35523E1C247C55F20080FC9E /* Assets.xcassets */,
+				3590AF2E247D2CBC0058EF49 /* Default-568h@2x.png */,
 				35523E1E247C55F20080FC9E /* LaunchScreen.storyboard */,
 				35523E21247C55F20080FC9E /* Info.plist */,
 			);
@@ -88,6 +93,7 @@
 			children = (
 				3590AF21247D01980058EF49 /* PeopleViewController.swift */,
 				3590AF23247D03C90058EF49 /* DetailedInfoViewController.swift */,
+				3590AF2C247D296A0058EF49 /* SpinnerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -167,6 +173,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35523E20247C55F20080FC9E /* LaunchScreen.storyboard in Resources */,
+				3590AF2F247D2CBC0058EF49 /* Default-568h@2x.png in Resources */,
 				35523E1D247C55F20080FC9E /* Assets.xcassets in Resources */,
 				35523E1B247C55EE0080FC9E /* Main.storyboard in Resources */,
 			);
@@ -184,6 +191,7 @@
 				3590AF24247D03C90058EF49 /* DetailedInfoViewController.swift in Sources */,
 				35523E14247C55EE0080FC9E /* AppDelegate.swift in Sources */,
 				35523E16247C55EE0080FC9E /* SceneDelegate.swift in Sources */,
+				3590AF2D247D296A0058EF49 /* SpinnerViewController.swift in Sources */,
 				3590AF22247D01980058EF49 /* PeopleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -330,7 +338,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 36JR7N2LBE;
-				INFOPLIST_FILE = Contacts/Info.plist;
+				INFOPLIST_FILE = "Contacts/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -348,7 +356,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 36JR7N2LBE;
-				INFOPLIST_FILE = Contacts/Info.plist;
+				INFOPLIST_FILE = "Contacts/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
