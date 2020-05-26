@@ -12,6 +12,7 @@
 		35523E1B247C55EE0080FC9E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35523E19247C55EE0080FC9E /* Main.storyboard */; };
 		35523E1D247C55F20080FC9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35523E1C247C55F20080FC9E /* Assets.xcassets */; };
 		35523E20247C55F20080FC9E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35523E1E247C55F20080FC9E /* LaunchScreen.storyboard */; };
+		356B417E247D3C6000EC69F1 /* mail.txt in Resources */ = {isa = PBXBuildFile; fileRef = 356B417D247D3C6000EC69F1 /* mail.txt */; };
 		3590AF22247D01980058EF49 /* PeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF21247D01980058EF49 /* PeopleViewController.swift */; };
 		3590AF24247D03C90058EF49 /* DetailedInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF23247D03C90058EF49 /* DetailedInfoViewController.swift */; };
 		3590AF27247D04D20058EF49 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF26247D04D20058EF49 /* Person.swift */; };
@@ -30,6 +31,7 @@
 		35523E1C247C55F20080FC9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35523E1F247C55F20080FC9E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35523E21247C55F20080FC9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		356B417D247D3C6000EC69F1 /* mail.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mail.txt; sourceTree = "<group>"; };
 		3590AF21247D01980058EF49 /* PeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleViewController.swift; sourceTree = "<group>"; };
 		3590AF23247D03C90058EF49 /* DetailedInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedInfoViewController.swift; sourceTree = "<group>"; };
 		3590AF26247D04D20058EF49 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 				35523E1C247C55F20080FC9E /* Assets.xcassets */,
 				3590AF2E247D2CBC0058EF49 /* Default-568h@2x.png */,
 				35523E1E247C55F20080FC9E /* LaunchScreen.storyboard */,
+				356B417D247D3C6000EC69F1 /* mail.txt */,
 				35523E21247C55F20080FC9E /* Info.plist */,
 			);
 			path = "Supporting Files";
@@ -190,6 +193,7 @@
 				3590AF2F247D2CBC0058EF49 /* Default-568h@2x.png in Resources */,
 				35523E1D247C55F20080FC9E /* Assets.xcassets in Resources */,
 				35523E1B247C55EE0080FC9E /* Main.storyboard in Resources */,
+				356B417E247D3C6000EC69F1 /* mail.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -42,6 +42,8 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemBackground
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(ListCell.self, forCellWithReuseIdentifier: ListCell.reuseIdentifier)
+        collectionView.register(GridCell.self, forCellWithReuseIdentifier: GridCell.reuseIdentifier)
         view.addSubview(collectionView)
         
         collectionView.delegate = self
@@ -56,6 +58,32 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5)
         ])
+        
+        let spinnerController = SpinnerViewController()
+
+        // Add the spinner view controller.
+        addChild(spinnerController)
+        spinnerController.view.frame = view.frame
+        view.addSubview(spinnerController.view)
+        spinnerController.didMove(toParent: self)
+        
+        DispatchQueue.global(qos: .background).async {
+            self.isUpdating = true
+            if let mailsURL = Bundle.main.url(forResource: "mail", withExtension: "txt") {
+                if let mailList = try? String(contentsOf: mailsURL) {
+                    mailList.components(separatedBy: "\n").dropLast().forEach { (mail) in
+                        self.people.append(Person.fetchDataOfProfile(with: mail))
+                    }
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                        spinnerController.willMove(toParent: nil)
+                        spinnerController.view.removeFromSuperview()
+                        spinnerController.removeFromParent()
+                        self.isUpdating = false
+                    }
+                }
+            }
+        }
     }
     
     @objc func changeLayout() {
@@ -73,7 +101,15 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCell.reuseIdentifier, for: indexPath) as? ListCell else {
+            preconditionFailure("Failed to load collection view cell.")
+        }
+        
+        cell.label.text = people[indexPath.item].name
+        cell.indicator.isHidden = !people[indexPath.item].status
+        cell.imageView.image = people[indexPath.item].avatar
+        
+        return cell
     }
     
     // MARK: - UICollectionViewDelegate
