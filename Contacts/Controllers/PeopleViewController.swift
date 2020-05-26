@@ -75,6 +75,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
                         self.people.append(Person.fetchDataOfProfile(with: mail))
                     }
                     DispatchQueue.main.async {
+                        self.segmentedControl.selectedSegmentIndex = 0
                         self.collectionView.reloadData()
                         spinnerController.willMove(toParent: nil)
                         spinnerController.view.removeFromSuperview()
@@ -109,15 +110,26 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCell.reuseIdentifier, for: indexPath) as? ListCell else {
-            preconditionFailure("Failed to load collection view cell.")
+        if collectionView.collectionViewLayout is ColumnFlowLayout {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCell.reuseIdentifier, for: indexPath) as? ListCell else {
+                preconditionFailure("Failed to load collection view cell")
+            }
+            
+            cell.label.text = people[indexPath.item].name
+            cell.indicator.isHidden = !people[indexPath.item].status
+            cell.imageView.image = people[indexPath.item].avatar
+            
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridCell.reuseIdentifier, for: indexPath) as? GridCell else {
+                preconditionFailure("Failed to load collection view cell")
+            }
+            
+            cell.indicator.isHidden = !people[indexPath.item].status
+            cell.imageView.image = people[indexPath.item].avatar
+            
+            return cell
         }
-        
-        cell.label.text = people[indexPath.item].name
-        cell.indicator.isHidden = !people[indexPath.item].status
-        cell.imageView.image = people[indexPath.item].avatar
-        
-        return cell
     }
     
     // MARK: - UICollectionViewDelegate
