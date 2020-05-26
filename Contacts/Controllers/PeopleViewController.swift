@@ -128,7 +128,9 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
             case 1:
                 randomUpdates.append(Person.PersonUpdate.delete(index))
             case 2:
-                randomUpdates.append(Person.PersonUpdate.insert(Person(name: "Simulated Person", email: "person@server.com", status: Bool.random(), avatar: UIImage(systemName: "person.crop.circle")!), index))
+                let imageConfig = UIImage.SymbolConfiguration(scale: .large)
+                let defaultImage = UIImage(systemName: "person.crop.circle", withConfiguration: imageConfig)
+                randomUpdates.append(Person.PersonUpdate.insert(Person(name: "Simulated Person", email: "person@server.com", status: false, avatar: defaultImage!), index))
             case 3:
                 randomUpdates.append(Person.PersonUpdate.reload(index))
             case 4:
@@ -193,9 +195,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
             }
             
             // The simulate button is enabled only if the list still has people in it.
-            toolbarItems?.first(where: { (barItem) -> Bool in
-                barItem.title == "Simulate Changes"
-            })?.isEnabled = !people.isEmpty
+            toolbarItems?[1].isEnabled = !people.isEmpty
         })
     }
     
