@@ -48,6 +48,14 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         collectionView.dataSource = self
         collectionView.allowsSelection = true
         collectionView.isUserInteractionEnabled = true
+        
+        // Activate collection view constraints.
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 5),
+            collectionView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: 5),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5)
+        ])
     }
     
     @objc func changeLayout() {

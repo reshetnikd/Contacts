@@ -67,6 +67,6 @@ class ListCell: UICollectionViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("not implemented")
+        fatalError("Not implemented.")
     }
 }

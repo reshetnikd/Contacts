@@ -51,5 +51,4 @@ class GridCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("Not implemnted.")
     }
-
 }
