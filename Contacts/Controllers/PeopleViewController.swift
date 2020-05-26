@@ -135,7 +135,15 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     // MARK: - UICollectionViewDelegate
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        if let cell = collectionView.cellForItem(at: indexPath) as? ListCell {
+            let destinationVC = storyboard?.instantiateViewController(identifier: "DetailedInfo") as! DetailedInfoViewController
+            destinationVC.person = people[collectionView.indexPath(for: cell)!.item]
+            present(destinationVC, animated: true)
+        } else if let cell = collectionView.cellForItem(at: indexPath) as? GridCell {
+            let destinationVC = storyboard?.instantiateViewController(identifier: "DetailedInfo") as! DetailedInfoViewController
+            destinationVC.person = people[collectionView.indexPath(for: cell)!.item]
+            present(destinationVC, animated: true)
+        }
     }
     
 
