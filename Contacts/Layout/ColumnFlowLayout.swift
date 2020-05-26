@@ -10,7 +10,7 @@ import UIKit
 class ColumnFlowLayout: UICollectionViewFlowLayout {
 
     private let minColumnWidth: CGFloat = 300.0
-    private let cellHeight: CGFloat = 70.0
+    private let cellHeight: CGFloat = 50.0
     
     private var deletingIndexPaths = [IndexPath]()
     private var insertingIndexPaths = [IndexPath]()

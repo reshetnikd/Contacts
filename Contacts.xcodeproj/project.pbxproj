@@ -18,6 +18,8 @@
 		3590AF2A247D05530058EF49 /* ColumnFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF29247D05530058EF49 /* ColumnFlowLayout.swift */; };
 		3590AF2D247D296A0058EF49 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF2C247D296A0058EF49 /* SpinnerViewController.swift */; };
 		3590AF2F247D2CBC0058EF49 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3590AF2E247D2CBC0058EF49 /* Default-568h@2x.png */; };
+		3590AF38247D35650058EF49 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF37247D35650058EF49 /* ListCell.swift */; };
+		3590AF3A247D35A70058EF49 /* GridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3590AF39247D35A70058EF49 /* GridCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		3590AF29247D05530058EF49 /* ColumnFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnFlowLayout.swift; sourceTree = "<group>"; };
 		3590AF2C247D296A0058EF49 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		3590AF2E247D2CBC0058EF49 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		3590AF37247D35650058EF49 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
+		3590AF39247D35A70058EF49 /* GridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +72,7 @@
 			children = (
 				35523E13247C55EE0080FC9E /* AppDelegate.swift */,
 				35523E15247C55EE0080FC9E /* SceneDelegate.swift */,
+				3590AF34247D31CE0058EF49 /* Cells */,
 				3590AF2B247D055A0058EF49 /* Layout */,
 				3590AF28247D04D70058EF49 /* Model */,
 				3590AF25247D04350058EF49 /* Controllers */,
@@ -112,6 +117,15 @@
 				3590AF29247D05530058EF49 /* ColumnFlowLayout.swift */,
 			);
 			path = Layout;
+			sourceTree = "<group>";
+		};
+		3590AF34247D31CE0058EF49 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3590AF37247D35650058EF49 /* ListCell.swift */,
+				3590AF39247D35A70058EF49 /* GridCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -191,6 +205,8 @@
 				3590AF24247D03C90058EF49 /* DetailedInfoViewController.swift in Sources */,
 				35523E14247C55EE0080FC9E /* AppDelegate.swift in Sources */,
 				35523E16247C55EE0080FC9E /* SceneDelegate.swift in Sources */,
+				3590AF3A247D35A70058EF49 /* GridCell.swift in Sources */,
+				3590AF38247D35650058EF49 /* ListCell.swift in Sources */,
 				3590AF2D247D296A0058EF49 /* SpinnerViewController.swift in Sources */,
 				3590AF22247D01980058EF49 /* PeopleViewController.swift in Sources */,
 			);
