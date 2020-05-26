@@ -87,7 +87,15 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     @objc func changeLayout() {
-        
+        if segmentedControl.selectedSegmentIndex == 1 && !isUpdating {
+            collectionView.setCollectionViewLayout(UICollectionViewFlowLayout.init(), animated: true) { [weak self] (_) in
+                self?.collectionView.reloadData()
+            }
+        } else if !isUpdating {
+            collectionView.setCollectionViewLayout(flowLayout, animated: true) { [weak self] (_) in
+                self?.collectionView.reloadData()
+            }
+        }
     }
     
     @objc func simulateChanges() {
