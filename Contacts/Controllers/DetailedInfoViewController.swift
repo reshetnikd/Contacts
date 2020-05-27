@@ -10,11 +10,16 @@ import UIKit
 import MessageUI
 
 class DetailedInfoViewController: UIViewController, MFMailComposeViewControllerDelegate {
+    private var regularConstraints: [NSLayoutConstraint] = []
+    private var compactConstraints: [NSLayoutConstraint] = []
+    
     var backButton = UIButton(type: .custom)
     var imageView = UIImageView()
     var statusLabel = UILabel()
     var nameLabel = UILabel()
     var emailButton = UIButton()
+    
+    var originalImageSideSize: CGFloat = 0.0
     
     var person: Person? {
         didSet {
@@ -49,9 +54,11 @@ class DetailedInfoViewController: UIViewController, MFMailComposeViewControllerD
         if imageView.image != nil && imageView.image!.isEqual(UIImage(systemName: "person.crop.circle")) {
             imageView.widthAnchor.constraint(equalToConstant: 100 * UIScreen.main.scale).isActive = true
             imageView.heightAnchor.constraint(equalToConstant: 100 * UIScreen.main.scale).isActive = true
+            originalImageSideSize = 100 * UIScreen.main.scale
         } else {
             imageView.widthAnchor.constraint(equalToConstant: imageView.image!.size.width).isActive = true
             imageView.heightAnchor.constraint(equalToConstant: imageView.image!.size.height).isActive = true
+            originalImageSideSize = imageView.image!.size.width
         }
         
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -69,12 +76,14 @@ class DetailedInfoViewController: UIViewController, MFMailComposeViewControllerD
         emailButton.addTarget(self, action: #selector(sendEmail), for: .touchUpInside)
         view.addSubview(emailButton)
         
-        NSLayoutConstraint.activate([
+        regularConstraints.append(contentsOf: [
             backButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 16),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: originalImageSideSize),
+            imageView.heightAnchor.constraint(equalToConstant: originalImageSideSize),
             
             statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             statusLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
@@ -85,6 +94,45 @@ class DetailedInfoViewController: UIViewController, MFMailComposeViewControllerD
             emailButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emailButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8)
         ])
+        
+        compactConstraints.append(contentsOf: [
+            backButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 16),
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: originalImageSideSize * 0.5),
+            imageView.heightAnchor.constraint(equalToConstant: originalImageSideSize * 0.5),
+            
+            statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            statusLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            
+            nameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nameLabel.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 8),
+            
+            emailButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emailButton.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8)
+        ])
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .regular || traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .regular {
+            if compactConstraints.count > 0 && compactConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(compactConstraints)
+            }
+            // Activating regular constraints.
+            NSLayoutConstraint.activate(regularConstraints)
+            imageView.layer.cornerRadius = (originalImageSideSize) / 2
+        } else if traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .compact || traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .compact {
+            if regularConstraints.count > 0 && regularConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(regularConstraints)
+            }
+            // Activating compact constraints.
+            NSLayoutConstraint.activate(compactConstraints)
+            imageView.layer.cornerRadius = (originalImageSideSize * 0.5) / 2
+        }
     }
     
     @objc func backButtonAction() {
