@@ -44,6 +44,15 @@ class DetailedInfoViewController: UIViewController {
         imageView.clipsToBounds = true
         view.addSubview(imageView)
         
+        // Apply different size constraints for used avatar images.
+        if imageView.image != nil && imageView.image!.isEqual(UIImage(systemName: "person.crop.circle")) {
+            imageView.widthAnchor.constraint(equalToConstant: 100 * UIScreen.main.scale).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: 100 * UIScreen.main.scale).isActive = true
+        } else {
+            imageView.widthAnchor.constraint(equalToConstant: imageView.image!.size.width).isActive = true
+            imageView.heightAnchor.constraint(equalToConstant: imageView.image!.size.height).isActive = true
+        }
+        
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         statusLabel.adjustsFontForContentSizeCategory = true
         statusLabel.font = UIFont.preferredFont(forTextStyle: .headline)
@@ -65,8 +74,6 @@ class DetailedInfoViewController: UIViewController {
             
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: imageView.image!.size.width),
-            imageView.heightAnchor.constraint(equalToConstant: imageView.image!.size.height),
             
             statusLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             statusLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),

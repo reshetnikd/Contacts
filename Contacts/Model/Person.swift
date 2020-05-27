@@ -77,9 +77,7 @@ struct Person {
             return Person(name: name, email: email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines), status: status, avatar: avatar)
         } catch {
             print("Error parsing JSON.")
-            let imageConfig = UIImage.SymbolConfiguration(scale: .large)
-            let defaultImage = UIImage(systemName: "person.crop.circle", withConfiguration: imageConfig)
-            return Person(name: "Person Name", email: "person@server.com", status: false, avatar: defaultImage!)
+            return Person(name: "Person Name", email: "person@server.com", status: false, avatar: UIImage(systemName: "person.crop.circle")!)
         }
     }
 }

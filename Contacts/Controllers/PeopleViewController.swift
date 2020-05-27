@@ -207,9 +207,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         // Populate peopleUpdates with insert actions.
         randomIndecies.removingDuplicates().forEach { (index) in
-            let imageConfig = UIImage.SymbolConfiguration(scale: .large)
-            let defaultImage = UIImage(systemName: "person.crop.circle", withConfiguration: imageConfig)
-            peopleUpdates.append(Person.PersonUpdate.insert(Person(name: "Simulated Person", email: "person@server.com", status: false, avatar: defaultImage!), index))
+            peopleUpdates.append(Person.PersonUpdate.insert(Person(name: "Simulated Person", email: "person@server.com", status: false, avatar: UIImage(systemName: "person.crop.circle")!), index))
         }
         
         // Animate all other update types together.
