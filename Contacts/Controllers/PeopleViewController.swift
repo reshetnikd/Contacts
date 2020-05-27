@@ -102,39 +102,31 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     @objc func simulateChanges() {
+        renameAndReloadRandomPeople()
+        deleteRandomPeople()
+        insertRandomPeople()
+    }
+    
+    func renameAndReloadRandomPeople() {
         var randomIndecies = [Int]()
-        var randomUpdates = [Person.PersonUpdate]()
-        
-        // Predefined actions for test purposes.
-        let definedUpdates = [
-            Person.PersonUpdate.move(0, 1),
-            Person.PersonUpdate.move(1, 2),
-            Person.PersonUpdate.move(2, 3),
-            Person.PersonUpdate.reload(3),
-            Person.PersonUpdate.rename(6),
-            Person.PersonUpdate.rename(7),
-        ]
+        var peopleUpdates = [Person.PersonUpdate]()
         
         // Generate random indecies.
-        for _ in 0...20 {
-            randomIndecies.append(Int.random(in: 0...people.count - 1))
+        for _ in 0...people.count {
+            if Bool.random() {
+                randomIndecies.append(Int.random(in: 0...people.count - 1))
+            }
         }
         
-        // Populate randomUpdates with random actions.
+        // Populate peopleUpdates with reload or rename actions.
         randomIndecies.removingDuplicates().forEach { (index) in
-            let action = Int.random(in: 1...4)
+            let action = Int.random(in: 0...1)
             
             switch action {
+            case 0:
+                peopleUpdates.append(Person.PersonUpdate.reload(index))
             case 1:
-                randomUpdates.append(Person.PersonUpdate.delete(index))
-            case 2:
-                let imageConfig = UIImage.SymbolConfiguration(scale: .large)
-                let defaultImage = UIImage(systemName: "person.crop.circle", withConfiguration: imageConfig)
-                randomUpdates.append(Person.PersonUpdate.insert(Person(name: "Simulated Person", email: "person@server.com", status: false, avatar: defaultImage!), index))
-            case 3:
-                randomUpdates.append(Person.PersonUpdate.reload(index))
-            case 4:
-                randomUpdates.append(Person.PersonUpdate.rename(index))
+                peopleUpdates.append(Person.PersonUpdate.rename(index))
             default:
                 break
             }
@@ -143,7 +135,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         // Perform any cell reloads without animation because there is no movement.
         UIView.performWithoutAnimation {
             collectionView.performBatchUpdates({
-                for update in randomUpdates {
+                for update in peopleUpdates {
                     if case let .reload(index) = update {
                         people[index].status = Bool.random()
                         collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
@@ -154,31 +146,38 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
                 }
             })
         }
+    }
+    
+    func deleteRandomPeople() {
+        guard people.count > 2 else {
+            // The simulate button is enabled only if the list still has 2 people in it.
+            toolbarItems?[1].isEnabled = false
+            return
+        }
+        var randomIndecies = [Int]()
+        var peopleUpdates = [Person.PersonUpdate]()
+        
+        // Generate random indecies.
+        for _ in 0...people.count {
+            if Bool.random() {
+                randomIndecies.append(Int.random(in: 0...people.count - 1))
+            }
+        }
+        
+        // Populate peopleUpdates with delete actions.
+        randomIndecies.removingDuplicates().forEach { (index) in
+            peopleUpdates.append(Person.PersonUpdate.delete(index))
+        }
         
         // Animate all other update types together.
         collectionView.performBatchUpdates({
             var deletes = [Int]()
-            var inserts = [(person:Person, index:Int)]()
-
-            for update in randomUpdates {
+            
+            for update in peopleUpdates {
                 switch update {
                 case let .delete(index):
                     collectionView.deleteItems(at: [IndexPath(item: index, section: 0)])
                     deletes.append(index)
-                    
-                case let .insert(person, index):
-                    if collectionView.isValid(indexPath: IndexPath(item: index, section: 0)) {
-                        collectionView.insertItems(at: [IndexPath(item: index, section: 0)])
-                        inserts.append((person, index))
-                    }
-                    
-                case let .move(fromIndex, toIndex):
-                    // Updates that move a person are split into an addition and a deletion.
-                    collectionView.moveItem(at: IndexPath(item: fromIndex, section: 0),
-                                            to: IndexPath(item: toIndex, section: 0))
-                    deletes.append(fromIndex)
-                    inserts.append((people[fromIndex], toIndex))
-                    
                 default: break
                 }
             }
@@ -186,6 +185,44 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
             // Apply deletions in descending order.
             for deletedIndex in deletes.sorted().reversed() {
                 people.remove(at: deletedIndex)
+            }
+        })
+    }
+    
+    func insertRandomPeople() {
+        guard people.count > 2 else {
+            // The simulate button is enabled only if the list still has 2 people in it.
+            toolbarItems?[1].isEnabled = false
+            return
+        }
+        var randomIndecies = [Int]()
+        var peopleUpdates = [Person.PersonUpdate]()
+        
+        // Generate random indecies.
+        for _ in 0...people.count {
+            if Bool.random() {
+                randomIndecies.append(Int.random(in: 0...people.count - 1))
+            }
+        }
+        
+        // Populate peopleUpdates with insert actions.
+        randomIndecies.removingDuplicates().forEach { (index) in
+            let imageConfig = UIImage.SymbolConfiguration(scale: .large)
+            let defaultImage = UIImage(systemName: "person.crop.circle", withConfiguration: imageConfig)
+            peopleUpdates.append(Person.PersonUpdate.insert(Person(name: "Simulated Person", email: "person@server.com", status: false, avatar: defaultImage!), index))
+        }
+        
+        // Animate all other update types together.
+        collectionView.performBatchUpdates({
+            var inserts = [(person:Person, index:Int)]()
+            
+            for update in peopleUpdates {
+                switch update {
+                case let .insert(person, index):
+                    collectionView.insertItems(at: [IndexPath(item: index, section: 0)])
+                    inserts.append((person, index))
+                default: break
+                }
             }
             
             // Apply insertions in ascending order.
@@ -198,11 +235,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
                     people.insert(insertion.person, at: insertion.index)
                 }
             }
-            
-            // The simulate button is enabled only if the list still has people in it.
-            toolbarItems?[1].isEnabled = !people.isEmpty
         })
-//         */
     }
     
     // MARK: - UICollectionViewDataSource
@@ -273,14 +306,4 @@ extension Array where Element: Hashable {
     mutating func removeDuplicates() {
         self = self.removingDuplicates()
     }
-}
-
-extension UICollectionView {
-    func isValid(indexPath: IndexPath) -> Bool {
-        guard indexPath.section < numberOfSections,
-              indexPath.item < numberOfItems(inSection: indexPath.section)
-            else { return false }
-        return true
-    }
-
 }
