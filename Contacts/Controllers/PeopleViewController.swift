@@ -167,8 +167,10 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
                     deletes.append(index)
                     
                 case let .insert(person, index):
-                    collectionView.insertItems(at: [IndexPath(item: index, section: 0)])
-                    inserts.append((person, index))
+                    if collectionView.isValid(indexPath: IndexPath(item: index, section: 0)) {
+                        collectionView.insertItems(at: [IndexPath(item: index, section: 0)])
+                        inserts.append((person, index))
+                    }
                     
                 case let .move(fromIndex, toIndex):
                     // Updates that move a person are split into an addition and a deletion.
@@ -190,13 +192,17 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
             let sortedInserts = inserts.sorted(by: { (personA, personB) -> Bool in
                 return personA.index <= personB.index
             })
+            
             for insertion in sortedInserts {
-                people.insert(insertion.person, at: insertion.index)
+                if people.indices.contains(insertion.index) {
+                    people.insert(insertion.person, at: insertion.index)
+                }
             }
             
             // The simulate button is enabled only if the list still has people in it.
             toolbarItems?[1].isEnabled = !people.isEmpty
         })
+//         */
     }
     
     // MARK: - UICollectionViewDataSource
@@ -267,4 +273,14 @@ extension Array where Element: Hashable {
     mutating func removeDuplicates() {
         self = self.removingDuplicates()
     }
+}
+
+extension UICollectionView {
+    func isValid(indexPath: IndexPath) -> Bool {
+        guard indexPath.section < numberOfSections,
+              indexPath.item < numberOfItems(inSection: indexPath.section)
+            else { return false }
+        return true
+    }
+
 }
