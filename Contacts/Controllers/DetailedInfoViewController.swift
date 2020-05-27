@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import MessageUI
 
-class DetailedInfoViewController: UIViewController {
+class DetailedInfoViewController: UIViewController, MFMailComposeViewControllerDelegate {
     var backButton = UIButton(type: .custom)
     var imageView = UIImageView()
     var statusLabel = UILabel()
@@ -91,7 +92,27 @@ class DetailedInfoViewController: UIViewController {
     }
     
     @objc func sendEmail() {
-        
+        if MFMailComposeViewController.canSendMail() {
+            let composeVC = MFMailComposeViewController()
+            composeVC.mailComposeDelegate = self
+             
+            // Configure the fields of the interface.
+            composeVC.setToRecipients([person!.email])
+            composeVC.setSubject("Hello!")
+            composeVC.setMessageBody("Hello from Bila Tserkva!", isHTML: false)
+             
+            // Present the view controller modally.
+            self.present(composeVC, animated: true, completion: nil)
+        } else {
+            let alertVC = UIAlertController(title: "Error", message: "Mail services are not available", preferredStyle: .alert)
+            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            self.present(alertVC, animated: true, completion: nil)
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        // Dismiss the mail compose view controller.
+        controller.dismiss(animated: true, completion: nil)
     }
     
 
