@@ -70,21 +70,19 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         DispatchQueue.global(qos: .background).async {
             self.isUpdating = true
-            if let mailsURL = Bundle.main.url(forResource: "mail", withExtension: "txt") {
-                if let mailList = try? String(contentsOf: mailsURL) {
-                    mailList.components(separatedBy: "\n").dropLast().forEach { (mail) in
-                        self.people.append(Person.fetchDataOfProfile(with: mail))
-                    }
-                    DispatchQueue.main.async {
-                        self.segmentedControl.selectedSegmentIndex = 0
-                        self.collectionView.reloadData()
-                        spinnerController.willMove(toParent: nil)
-                        spinnerController.view.removeFromSuperview()
-                        spinnerController.removeFromParent()
-                        self.isUpdating = false
-                        self.toolbarItems?[1].isEnabled = true
-                    }
-                }
+            let data = MailData()
+            
+            data.mailboxes.forEach { (mailbox) in
+                self.people.append(Person.fetchDataOfProfile(with: mailbox))
+            }
+            DispatchQueue.main.async {
+                self.segmentedControl.selectedSegmentIndex = 0
+                self.collectionView.reloadData()
+                spinnerController.willMove(toParent: nil)
+                spinnerController.view.removeFromSuperview()
+                spinnerController.removeFromParent()
+                self.isUpdating = false
+                self.toolbarItems?[1].isEnabled = true
             }
         }
     }
@@ -108,6 +106,12 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     func renameAndReloadRandomPeople() {
+        guard people.count > 2 else {
+            // The simulate button is enabled only if the list still has 2 people in it.
+            toolbarItems?[1].isEnabled = false
+            return
+        }
+        
         var randomIndecies = [Int]()
         var peopleUpdates = [Person.PersonUpdate]()
         
