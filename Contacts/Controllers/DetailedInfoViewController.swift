@@ -18,7 +18,6 @@ class DetailedInfoViewController: UIViewController, MFMailComposeViewControllerD
     var statusLabel = UILabel()
     var nameLabel = UILabel()
     var emailButton = UIButton()
-    
     var originalImageSideSize: CGFloat = 0.0
     
     var person: Person? {
@@ -99,8 +98,8 @@ class DetailedInfoViewController: UIViewController, MFMailComposeViewControllerD
             backButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 16),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -32),
             imageView.widthAnchor.constraint(equalToConstant: originalImageSideSize * 0.5),
             imageView.heightAnchor.constraint(equalToConstant: originalImageSideSize * 0.5),
             
