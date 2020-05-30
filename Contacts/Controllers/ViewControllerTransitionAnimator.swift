@@ -17,7 +17,7 @@ enum PresentationType {
 }
 
 final class ViewControllerTransitionAnimator: NSObject, UIViewControllerAnimatedTransitioning {
-    static let duration: TimeInterval = 1.25
+    static let duration: TimeInterval = 0.25
     
     private let type: PresentationType
     private let sourceVC: PeopleViewController
@@ -58,6 +58,44 @@ final class ViewControllerTransitionAnimator: NSObject, UIViewControllerAnimated
         
         containerView.addSubview(toView)
         
-        transitionContext.completeTransition(true)
+        guard let selectedCell = sourceVC.selectedCell, let window = sourceVC.view.window ?? destinationVC.view.window, let cellImageSnapshot = selectedCell is ListCell ? (selectedCell as! ListCell).imageView.snapshotView(afterScreenUpdates: true) : (selectedCell as! GridCell).imageView.snapshotView(afterScreenUpdates: true), let controllerImageSnapshot = destinationVC.imageView.snapshotView(afterScreenUpdates: true) else {
+            transitionContext.completeTransition(true)
+            return
+        }
+        
+        let isPresenting = type.isPresenting
+        let imageViewSnapshot: UIView
+        
+        if isPresenting {
+            imageViewSnapshot = cellImageSnapshot
+        } else {
+            imageViewSnapshot = controllerImageSnapshot
+        }
+        
+        toView.alpha = 0
+        containerView.addSubview(imageViewSnapshot)
+        
+        let controllerImageViewRect = destinationVC.imageView.convert(destinationVC.imageView.bounds, to: window)
+        imageViewSnapshot.frame = isPresenting ? cellImageViewRect : controllerImageViewRect
+        
+        UIView.animateKeyframes(
+            withDuration: ViewControllerTransitionAnimator.duration,
+            delay: 0,
+            options: .calculationModeCubic,
+            animations: {
+                UIView.addKeyframe(
+                    withRelativeStartTime: 0,
+                    relativeDuration: 1,
+                    animations: {
+                        imageViewSnapshot.frame = isPresenting ? controllerImageViewRect : self.cellImageViewRect
+                    }
+                )
+            }, completion: { (_) in
+                imageViewSnapshot.removeFromSuperview()
+                toView.alpha = 1
+                transitionContext.completeTransition(true)
+            }
+        )
+        
     }
 }
