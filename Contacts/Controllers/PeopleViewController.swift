@@ -11,6 +11,7 @@ import UIKit
 class PeopleViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     private var collectionView: UICollectionView! = nil
     private var segmentedControl: UISegmentedControl! = nil
+    private var simulateButton: UIButton! = nil
     private var flowLayout = ColumnFlowLayout()
     private var isUpdating = false
     
@@ -26,20 +27,19 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         let titles = ["List", "Grid"]
         // Setup segmented control.
         segmentedControl = UISegmentedControl(items: titles)
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.setWidth(100, forSegmentAt: 0)
         segmentedControl.setWidth(100, forSegmentAt: 1)
         segmentedControl.addTarget(self, action: #selector(changeLayout), for: .valueChanged)
-        navigationItem.titleView = segmentedControl
+        view.addSubview(segmentedControl)
         
-        // Setup toolbar.
-        navigationController?.isToolbarHidden = false
-        var items = [UIBarButtonItem]()
-        items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
-        items.append(UIBarButtonItem(title: "Simulate Changes", style: .plain, target: self, action: #selector(simulateChanges)))
-        items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
-        toolbarItems = items
-        toolbarItems?[1].isEnabled = false
+        // Setup bottom button.
+        simulateButton = UIButton(type: .system)
+        simulateButton.translatesAutoresizingMaskIntoConstraints = false
+        simulateButton.setTitle("Simulate Changes", for: .normal)
+        simulateButton.addTarget(self, action: #selector(simulateChanges), for: .touchUpInside)
+        view.addSubview(simulateButton)
         
         // Setup collection view.
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
@@ -57,10 +57,16 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         
         // Activate collection view constraints.
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 5),
-            collectionView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: 5),
+            segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
+            segmentedControl.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            
+            collectionView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 10),
+            collectionView.bottomAnchor.constraint(equalTo: simulateButton.topAnchor, constant: -10),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5)
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            
+            simulateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            simulateButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
         ])
         
         let spinnerController = SpinnerViewController()
@@ -111,7 +117,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     func renameAndReloadRandomPeople() {
         guard people.count > 2 else {
             // The simulate button is enabled only if the list still has 2 people in it.
-            toolbarItems?[1].isEnabled = false
+            simulateButton.isEnabled = false
             return
         }
         
@@ -158,7 +164,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     func deleteRandomPeople() {
         guard people.count > 2 else {
             // The simulate button is enabled only if the list still has 2 people in it.
-            toolbarItems?[1].isEnabled = false
+            simulateButton.isEnabled = false
             return
         }
         var randomIndecies = [Int]()
@@ -199,7 +205,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     func insertRandomPeople() {
         guard people.count > 2 else {
             // The simulate button is enabled only if the list still has 2 people in it.
-            toolbarItems?[1].isEnabled = false
+            simulateButton.isEnabled = false
             return
         }
         var randomIndecies = [Int]()
@@ -311,19 +317,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
 
 extension PeopleViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-//        guard let sourceVC = presenting as? PeopleViewController, let destinationVC = presented as? DetailedInfoViewController, let selectedSnapshot = selectedCellImageViewSnapshot else {
-//            return nil
-//        }
-        guard let sourceVC = presenting as? PeopleViewController else {
-            print(presenting.description)
-            return nil
-        }
-        
-        guard let destinationVC = presented as? DetailedInfoViewController else {
-            return nil
-        }
-        
-        guard let selectedSnapshot = selectedCellImageViewSnapshot else {
+        guard let sourceVC = presenting as? PeopleViewController, let destinationVC = presented as? DetailedInfoViewController, let selectedSnapshot = selectedCellImageViewSnapshot else {
             return nil
         }
         
