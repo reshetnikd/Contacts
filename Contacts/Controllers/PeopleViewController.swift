@@ -15,6 +15,9 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     private var isUpdating = false
     
     var people = [Person]()
+    var selectedCell: UICollectionViewCell?
+    var selectedCellImageViewSnapshot: UIView?
+    var transitionAnimator: ViewControllerTransitionAnimator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -273,12 +276,22 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) as? ListCell {
-            let destinationVC = storyboard?.instantiateViewController(identifier: "DetailedInfo") as! DetailedInfoViewController
+            selectedCell = cell
+            selectedCellImageViewSnapshot = cell.imageView.snapshotView(afterScreenUpdates: false)
+            
+            let destinationVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "DetailedInfo") as! DetailedInfoViewController
+            destinationVC.modalPresentationStyle = .overCurrentContext
             destinationVC.person = people[collectionView.indexPath(for: cell)!.item]
+            destinationVC.transitioningDelegate = self
             present(destinationVC, animated: true)
         } else if let cell = collectionView.cellForItem(at: indexPath) as? GridCell {
+            selectedCell = cell
+            selectedCellImageViewSnapshot = cell.imageView.snapshotView(afterScreenUpdates: false)
+            
             let destinationVC = storyboard?.instantiateViewController(identifier: "DetailedInfo") as! DetailedInfoViewController
+            destinationVC.modalPresentationStyle = .overCurrentContext
             destinationVC.person = people[collectionView.indexPath(for: cell)!.item]
+            destinationVC.transitioningDelegate = self
             present(destinationVC, animated: true)
         }
     }
@@ -294,6 +307,38 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     */
 
+}
+
+extension PeopleViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        guard let sourceVC = presenting as? PeopleViewController, let destinationVC = presented as? DetailedInfoViewController, let selectedSnapshot = selectedCellImageViewSnapshot else {
+//            return nil
+//        }
+        guard let sourceVC = presenting as? PeopleViewController else {
+            print(presenting.description)
+            return nil
+        }
+        
+        guard let destinationVC = presented as? DetailedInfoViewController else {
+            return nil
+        }
+        
+        guard let selectedSnapshot = selectedCellImageViewSnapshot else {
+            return nil
+        }
+        
+        transitionAnimator = ViewControllerTransitionAnimator(type: .present, source: sourceVC, destination: destinationVC, snapshot: selectedSnapshot)
+        return transitionAnimator
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let currentVC = dismissed as? DetailedInfoViewController, let selectedSnapshot = selectedCellImageViewSnapshot else {
+            return nil
+        }
+        
+        transitionAnimator = ViewControllerTransitionAnimator(type: .dismiss, source: self, destination: currentVC, snapshot: selectedSnapshot)
+        return transitionAnimator
+    }
 }
 
 extension Array where Element: Hashable {
