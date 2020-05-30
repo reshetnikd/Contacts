@@ -12,6 +12,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
     private var collectionView: UICollectionView! = nil
     private var segmentedControl: UISegmentedControl! = nil
     private var simulateButton: UIButton! = nil
+    private var spinnerController = SpinnerViewController()
     private var flowLayout = ColumnFlowLayout()
     private var isUpdating = false
     
@@ -39,6 +40,7 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         simulateButton.translatesAutoresizingMaskIntoConstraints = false
         simulateButton.setTitle("Simulate Changes", for: .normal)
         simulateButton.addTarget(self, action: #selector(simulateChanges), for: .touchUpInside)
+        simulateButton.isEnabled = false
         view.addSubview(simulateButton)
         
         // Setup collection view.
@@ -50,32 +52,31 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
         collectionView.register(GridCell.self, forCellWithReuseIdentifier: GridCell.reuseIdentifier)
         view.addSubview(collectionView)
         
+        // Add spinner view controller.
+        spinnerController.view.center = view.center
+        view.addSubview(spinnerController.view)
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.allowsSelection = true
         collectionView.isUserInteractionEnabled = true
         
-        // Activate collection view constraints.
+        // Activate constraints.
         NSLayoutConstraint.activate([
             segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
             segmentedControl.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             
+            spinnerController.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            spinnerController.view.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
             collectionView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 10),
             collectionView.bottomAnchor.constraint(equalTo: simulateButton.topAnchor, constant: -10),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 5),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -5),
             
             simulateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
             simulateButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
         ])
-        
-        let spinnerController = SpinnerViewController()
-
-        // Add the spinner view controller.
-        addChild(spinnerController)
-        spinnerController.view.frame = view.frame
-        view.addSubview(spinnerController.view)
-        spinnerController.didMove(toParent: self)
         
         DispatchQueue.global(qos: .background).async {
             self.isUpdating = true
@@ -87,13 +88,22 @@ class PeopleViewController: UIViewController, UICollectionViewDataSource, UIColl
             DispatchQueue.main.async {
                 self.segmentedControl.selectedSegmentIndex = 0
                 self.collectionView.reloadData()
-                spinnerController.willMove(toParent: nil)
-                spinnerController.view.removeFromSuperview()
-                spinnerController.removeFromParent()
+                self.spinnerController.view.removeFromSuperview()
+                self.spinnerController.removeFromParent()
                 self.isUpdating = false
-                self.toolbarItems?[1].isEnabled = true
+                self.simulateButton.isEnabled = true
             }
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        spinnerController.view.center = view.center
+    }
+    
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        view.setNeedsLayout()
     }
     
     @objc func changeLayout() {
