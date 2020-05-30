@@ -65,14 +65,23 @@ final class ViewControllerTransitionAnimator: NSObject, UIViewControllerAnimated
         
         let isPresenting = type.isPresenting
         let imageViewSnapshot: UIView
+        let backgroundView: UIView
+        let fadeView = UIView(frame: containerView.bounds)
+        fadeView.backgroundColor = destinationVC.view.backgroundColor
         
         if isPresenting {
             imageViewSnapshot = cellImageSnapshot
+            backgroundView = UIView(frame: containerView.bounds)
+            backgroundView.addSubview(fadeView)
+            fadeView.alpha = 0
         } else {
             imageViewSnapshot = controllerImageSnapshot
+            backgroundView = sourceVC.view.snapshotView(afterScreenUpdates: true) ?? fadeView
+            backgroundView.addSubview(fadeView)
         }
         
         toView.alpha = 0
+        containerView.addSubview(backgroundView)
         containerView.addSubview(imageViewSnapshot)
         
         let controllerImageViewRect = destinationVC.imageView.convert(destinationVC.imageView.bounds, to: window)
@@ -88,10 +97,12 @@ final class ViewControllerTransitionAnimator: NSObject, UIViewControllerAnimated
                     relativeDuration: 1,
                     animations: {
                         imageViewSnapshot.frame = isPresenting ? controllerImageViewRect : self.cellImageViewRect
+                        fadeView.alpha = isPresenting ? 1 : 0
                     }
                 )
             }, completion: { (_) in
                 imageViewSnapshot.removeFromSuperview()
+                backgroundView.removeFromSuperview()
                 toView.alpha = 1
                 transitionContext.completeTransition(true)
             }
